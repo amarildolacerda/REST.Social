@@ -14,7 +14,7 @@ Simplificando o trabalho:
 TRESTSocialClient
 -----------------
   Encapsula os componentes necessário para efetivar uma troca de informções entre do servidor para o cliente.
-  
+<pre>  
   public
     function Response: TRESTResponse;
     function Request: TRESTRequest;
@@ -29,6 +29,7 @@ TRESTSocialClient
     function SendStream(AUrl, AResource: string; AStream: TStream)
       : integer; virtual;
     function Post(url: string; AResource: string = ''): string; virtual;
+</pre>
 
   exemplo:
   
