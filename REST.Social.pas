@@ -218,6 +218,8 @@ begin
   RESTRequest1.Client := self;
   RESTRequest1.Response := RESTResponse1;
 
+  Authenticator := FAuth2;
+
   Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
   AcceptCharset := 'UTF-8, *;q=0.8';
   HandleRedirects := true;
@@ -235,6 +237,7 @@ function TRESTSocialClient.send(url: string; AResource: string;
   AMethod: TRESTRequestMethod): string;
 begin
   RESTRequest1.Method := AMethod;
+  RESTRequest1.Resource := AResource;
   BaseURL := url;
   RESTRequest1.Execute;
   result := RESTResponse1.Content;
@@ -278,8 +281,6 @@ procedure TRESTSocialClient.Clear;
 begin
   RESTRequest1.Params.Clear;
   RESTRequest1.SynchronizedEvents := false;
-  if AccessToken<>''  then
-     Authenticator := FAuth2;
 end;
 
 function TRESTSocialClient.Request: TRESTRequest;
