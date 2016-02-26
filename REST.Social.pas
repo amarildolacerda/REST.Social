@@ -15,7 +15,6 @@ type
     procedure LoadFromJsonFile(sFile: string); virtual;
   end;
 
-
   TCustomSocialAuthBase = class(TCustomSocialBase)
   private
     FAccessToken: string;
@@ -27,12 +26,9 @@ type
   public
     property AccessToken: string read FAccessToken write SetAccessToken;
     property Client_ID: string read FClient_ID write SetClient_ID;
-    property Client_Secret: string read FClient_Secret
-      write SetClient_Secret;
+    property Client_Secret: string read FClient_Secret write SetClient_Secret;
     procedure LoadFromJson(js: TJsonObject); override;
   end;
-
-
 
   TRESTSocialClient = class(TRESTClient)
   private
@@ -45,31 +41,28 @@ type
     function GetAccessToken: string;
   public
     StatusCode: integer;
-    ResponseText:string;
-    function Response:TRESTResponse;
-    function Request:TRESTRequest;
-    function Auth2:TOAuth2Authenticator;
+    ResponseText: string;
+    function Response: TRESTResponse;
+    function Request: TRESTRequest;
+    function Auth2: TOAuth2Authenticator;
     property AccessToken: string read GetAccessToken write SetAccessToken;
     procedure Clear; virtual;
     constructor create(ow: TComponent); override;
     destructor destroy; override;
-    function Get(url: string; AResource: string = ''): string;virtual;
-    function GetStream(AUrl: string; AResource: string;
-      AStream: TStream): integer;virtual;
-    function SendStream(AUrl,AResource: string; AStream: TStream): integer;virtual;
-    function Post(url: string; AResource: string = ''): string;virtual;
+    function Get(url: string; AResource: string = ''): string; virtual;
+    function GetStream(AUrl: string; AResource: string; AStream: TStream)
+      : integer; virtual;
+    function SendStream(AUrl, AResource: string; AStream: TStream)
+      : integer; virtual;
+    function Post(url: string; AResource: string = ''): string; virtual;
   end;
 
-
-
-function Indy_Send_File(ACommand:string;AccessToken, AFileName, ADPFileName:string): integer;overload;
+function Indy_Send_File(ACommand: string;
+  AccessToken, AFileName, ADPFileName: string): integer; overload;
 function Indy_Download_File(AccessToken: string; const exportLinks: string;
   AStream: System.Classes.TStream; FSSL: boolean): integer;
 
-
-
 implementation
-
 
 function Indy_Download_File(AccessToken: string; const exportLinks: string;
   AStream: System.Classes.TStream; FSSL: boolean): integer;
@@ -109,26 +102,26 @@ begin
   end;
 end;
 
-
-function Indy_Send_File_Stream(AccessToken, AUrl:string; AStream: TStream;
-  ASSL: boolean; var AResponseText:string): integer;overload;
+function Indy_Send_File_Stream(AccessToken, AUrl: string; AStream: TStream;
+  ASSL: boolean; var AResponseText: string): integer; overload;
 var
   LidHTTP: TIdHttp;
 begin
   LidHTTP := TIdHttp.create(nil);
   try
-    LidHTTP.Request.CustomHeaders.Values['Authorization'] := 'Bearer ' +      AccessToken;
+    LidHTTP.Request.CustomHeaders.Values['Authorization'] := 'Bearer ' +
+      AccessToken;
     LidHTTP.Request.ContentType := 'application/octet-stream';
-    //LIdHttp.Request.CustomHeaders.Values['Dropbox-API-Arg'] := '{ "path":"/apps/tete.pdf", "mode":"add","autorename": true, "mute": false }';
+    // LIdHttp.Request.CustomHeaders.Values['Dropbox-API-Arg'] := '{ "path":"/apps/tete.pdf", "mode":"add","autorename": true, "mute": false }';
     if ASSL then
       LidHTTP.IOHandler := TIdSSLIOHandlerSocketOpenSSL.create(LidHTTP);
     AStream.Position := 0;
 
     try
-    LidHTTP.Put(AUrl + '', AStream);
+      LidHTTP.Put(AUrl + '', AStream);
     except
     end;
-    AResponseText := LIdHttp.Response.ResponseText;
+    AResponseText := LidHTTP.Response.ResponseText;
     result := LidHTTP.ResponseCode;
 
   finally
@@ -136,27 +129,27 @@ begin
   end;
 end;
 
-function Indy_Send_File(ACommand:string;AccessToken, AFileName, ADPFileName:string):integer;overload;
-var AStream:TFileStream;
-    rsp : string;
-    cmd:string;
+function Indy_Send_File(ACommand: string;
+  AccessToken, AFileName, ADPFileName: string): integer; overload;
+var
+  AStream: TFileStream;
+  rsp: string;
+  cmd: string;
 begin
-    cmd :=  ACommand+ADPFileName;
-    AStream:=TFileStream.Create(AFileName,fmOpenRead);
-    try
-       result := Indy_Send_File_Stream(AccessToken,cmd,aStream,true,rsp);
-    finally
-      AStream.Free;
-    end;
+  cmd := ACommand + ADPFileName;
+  AStream := TFileStream.create(AFileName, fmOpenRead);
+  try
+    result := Indy_Send_File_Stream(AccessToken, cmd, AStream, true, rsp);
+  finally
+    AStream.Free;
+  end;
 end;
-
-
 
 procedure TCustomSocialBase.FromJson(aJson: string);
 var
   js: TJsonObject;
 begin
-  js := TJsonObject.ParseJSONValue(AJson) as TJsonObject;
+  js := TJsonObject.ParseJSONValue(aJson) as TJsonObject;
   try
     LoadFromJson(js);
   finally
@@ -181,7 +174,6 @@ begin
     str.Free;
   end;
 end;
-
 
 procedure TCustomSocialAuthBase.LoadFromJson(js: TJsonObject);
 begin
@@ -226,10 +218,9 @@ begin
   RESTRequest1.Client := self;
   RESTRequest1.Response := RESTResponse1;
 
-  Authenticator := FAuth2;
   Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
   AcceptCharset := 'UTF-8, *;q=0.8';
-  HandleRedirects := True;
+  HandleRedirects := true;
   RaiseExceptionOn500 := false;
 
 end;
@@ -250,9 +241,11 @@ begin
   StatusCode := RESTResponse1.StatusCode;
 end;
 
-function TRESTSocialClient.SendStream(AUrl,AResource: string; AStream: TStream): integer;
+function TRESTSocialClient.SendStream(AUrl, AResource: string;
+  AStream: TStream): integer;
 begin
-  result := Indy_Send_File_Stream(AccessToken, AUrl+AResource,  AStream, True,ResponseText );
+  result := Indy_Send_File_Stream(AccessToken, AUrl + AResource, AStream, true,
+    ResponseText);
 end;
 
 procedure TRESTSocialClient.SetAccessToken(const Value: string);
@@ -270,11 +263,10 @@ begin
   result := FAuth2.AccessToken;
 end;
 
-
 function TRESTSocialClient.GetStream(AUrl, AResource: string;
   AStream: TStream): integer;
 begin
-  result := Indy_Download_File(AccessToken, AUrl+AResource, AStream, True);
+  result := Indy_Download_File(AccessToken, AUrl + AResource, AStream, true);
 end;
 
 function TRESTSocialClient.Post(url: string; AResource: string = ''): string;
@@ -286,19 +278,18 @@ procedure TRESTSocialClient.Clear;
 begin
   RESTRequest1.Params.Clear;
   RESTRequest1.SynchronizedEvents := false;
+  if AccessToken<>''  then
+     Authenticator := FAuth2;
 end;
-
 
 function TRESTSocialClient.Request: TRESTRequest;
 begin
-   result := RESTRequest1;
+  result := RESTRequest1;
 end;
 
 function TRESTSocialClient.Response: TRESTResponse;
 begin
   result := RESTResponse1;
 end;
-
-
 
 end.

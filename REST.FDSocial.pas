@@ -2,7 +2,6 @@ unit REST.FDSocial;
 
 interface
 
-
 uses System.Sysutils, System.Classes, System.JSON, IPPeerClient,
   REST.Client, REST.Authenticator.OAuth, REST.Response.Adapter,
   REST.types, idHTTP, IdSSL, IdSSLOpenSSL, REST.Social,
@@ -11,10 +10,9 @@ uses System.Sysutils, System.Classes, System.JSON, IPPeerClient,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client;
 
-
 type
 
-              TRESTSocialClientDataset = class(TRESTSocialClient)
+  TRESTSocialClientDataset = class(TRESTSocialClient)
   private
     RESTResponseDataSetAdapter1: TRESTResponseDataSetAdapter;
     FDMemTable1: TFDMemTable;
@@ -33,8 +31,6 @@ type
 
 implementation
 
-
-
 function TRESTSocialClientDataset.GetRoot: string;
 begin
   result := RESTResponseDataSetAdapter1.RootElement;
@@ -51,7 +47,6 @@ begin
   RESTResponseDataSetAdapter1.RootElement := '';
 
 end;
-
 
 { TRESTClientDropBoxDataset }
 
@@ -88,7 +83,6 @@ begin
   result := RESTResponseDataSetAdapter1.DataSet;
 end;
 
-
 procedure TRESTSocialClientDataset.SetDataset(const Value: TDataset);
 begin
   RESTResponseDataSetAdapter1.DataSet := Value;
@@ -100,7 +94,7 @@ begin
   else
   begin
     RESTResponseDataSetAdapter1.Response := Response;
-    RESTResponseDataSetAdapter1.AutoUpdate := true;
+    RESTResponseDataSetAdapter1.AutoUpdate := True;
   end;
 end;
 
