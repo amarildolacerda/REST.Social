@@ -34,7 +34,7 @@ TRESTSocialClient
   exemplo:
 <pre>  
   var rsp:string;
-  TRESTSocialClient.create(nil);
+  with TRESTSocialClient.create(nil) do
   try
     rsp := Get('http://meuservidor/xxxx', '/GetCliente?codigo=1');  // chama o servidor para pegar GetCliente....  
   
@@ -47,7 +47,7 @@ TRESTSocialClientDataset
 ------------------------
   Herança de TRESTSocialClient que associa a resposta do servidor um Dataset;
 <pre>  
-  TRESTSocialClientDataset.create(nil);
+  with TRESTSocialClientDataset.create(nil) do
   try
     // pode indica um DATASET, para obter o retorno
     Dataset := MeuDataset;   // se nao for informado retorna um Dataset   TFDMemTable
